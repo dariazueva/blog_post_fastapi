@@ -1,20 +1,22 @@
 import asyncio
+import os
 from typing import Optional
 
 import aio_pika
-from aio_pika.abc import AbstractIncomingMessage, AbstractRobustConnection, AbstractExchange
-
+from aio_pika.abc import (
+    AbstractExchange,
+    AbstractIncomingMessage,
+    AbstractRobustConnection,
+)
 from app.core.database import AsyncSessionLocal
 from app.repositories.categories import CategoryRepository
 from app.services.categories import CategoryService
-
-import os
 
 RABBITMQ_URL = os.getenv("RABBITMQ_URL")
 
 
 async def process_category_check(
-        message: AbstractIncomingMessage, default_exchange: AbstractExchange
+    message: AbstractIncomingMessage, default_exchange: AbstractExchange
 ):
     """Обрабатывает входящий RPC-запрос на проверку категории."""
     async with message.process():
@@ -40,9 +42,7 @@ async def process_category_check(
 
         if message.reply_to and message.correlation_id:
             await default_exchange.publish(
-                aio_pika.Message(
-                    body=response, correlation_id=message.correlation_id
-                ),
+                aio_pika.Message(body=response, correlation_id=message.correlation_id),
                 routing_key=message.reply_to,
             )
 

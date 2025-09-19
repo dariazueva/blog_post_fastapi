@@ -1,14 +1,16 @@
 from typing import List, Optional
 
 from app.repositories.categories import CategoryRepository
-from app.schemas.category import CategoryBase, Category
+from app.schemas.category import Category, CategoryBase
 
 
 class CategoryService:
     def __init__(self, category_repo: CategoryRepository):
         self.category_repo = category_repo
 
-    async def get_all_categories(self, skip: int = 0, limit: int = 100) -> List[Category]:
+    async def get_all_categories(
+        self, skip: int = 0, limit: int = 100
+    ) -> List[Category]:
         db_categories = await self.category_repo.get_all(skip=skip, limit=limit)
         return db_categories
 

@@ -1,8 +1,8 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 from typing import List, Optional
 
 from app.models.category import Category
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class CategoryRepository:
@@ -10,7 +10,9 @@ class CategoryRepository:
         self.db = db
 
     async def get_by_id(self, category_id: int) -> Optional[Category]:
-        result = await self.db.scalar(select(Category).filter(Category.id == category_id))
+        result = await self.db.scalar(
+            select(Category).filter(Category.id == category_id)
+        )
         return result
 
     async def get_by_name(self, name: str) -> Optional[Category]:
